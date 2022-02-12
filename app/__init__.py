@@ -1,9 +1,23 @@
-#从flask包中导入Flask类
 from flask import Flask
+from config import Config
+import pymysql
+pymysql.install_as_MySQLdb()
 
-app = Flask(__name__)#将Flask类的实例 赋值给名为 app 的变量。这个实例成为app包的成员。
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_login import LoginManager
 
-#print('等会谁（哪个包或模块）在使用我：',__name__)
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db = SQLAlchemy(app)
+db.drop_all()
+migrate = Migrate(app,db)
+
+
+login = LoginManager(app)
+login.login_view = 'login'
 
 from app import routes  #从app包中导入模块routes
 
